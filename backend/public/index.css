@@ -1,0 +1,240 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.form {
+    background-color: #ffffff;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 300px;
+}
+
+.form h2 {
+    margin-bottom: 20px;
+    font-size: 24px;
+    color: #333;
+    text-align: center;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 8px;
+    box-sizing: border-box;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+button {
+    width: 100%;
+    padding: 10px;
+    background-color: #f696f0;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #b350b1;
+}
+
+/* css for index.html */
+
+
+
+header {
+  width: 100%;
+  background-color: #45d6be;
+  padding: 1em;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1;
+}
+
+header input[type="text"] {
+  padding: 0.5em;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-width: 0px;
+  outline: none;
+}
+
+.logo-text{
+  font-size: 14px;
+  height: 30px;
+}
+
+.nav-box{
+  margin-right: 100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+main {
+  width: calc(100% - 250px);
+  margin-top: 4em;
+  margin-left: 250px;
+  padding: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1em;
+}
+
+#notesContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1em;
+}
+
+.note {
+  background-color: #fff;
+  padding: 1em;
+  border: 1px solid #ccc;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  border-radius: 4px;
+  width: 200px;
+  min-height: 100px;
+  box-sizing: border-box;
+}
+
+.modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(63, 121, 124, 0.5);
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background-color: #ffffff;
+  padding: 2em;
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+}
+
+textarea {
+  width: 100%;
+  height: 100px;
+  padding: 1em;
+  box-sizing: border-box;
+}
+
+.sidebar {
+  width: 250px;
+  background-color: #d6fcfb;
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  padding-top: 60px;
+  transform: translateX(-250px);
+  transition: transform 0.3s ease;
+}
+
+.sidebar.open {
+  transform: translateX(0);
+}
+
+.sidebar ul {
+  list-style-type: none;
+  padding: 20px;
+}
+
+.sidebar ul li {
+  padding: 10px 20px;
+  text-align: left;
+}
+
+#toggleSidebarBtn {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+/* Add this to your existing styles */
+#labelsList {
+  list-style-type: none;
+  padding: 0;
+}
+
+#labelsList li {
+  cursor: pointer;
+  padding: 5px 10px;
+}
+
+#labelsList li:hover {
+  background-color: #f0f0f0;
+}
+
+.note {
+  border: 1px solid #ccc;
+  padding: 10px;
+  margin: 10px;
+  position: relative;
+}
+
+.note-label {
+  position: absolute;
+  top: 5px;
+  right: 10px;
+  background: #f0f0f0;
+  padding: 2px 5px;
+  border-radius: 3px;
+}
+
+.icon-button{
+  border-width: 0px;
+  background-color: transparent;
+  color: black;
+}
+
+.icon-button:hover {
+  background-color: none;
+}
+
+.icon-button-con{
+  list-style-type: none;
+  display: flex;
+}
+
+.icon{
+  font-size: 12px;
+  color: #000000;
+}
