@@ -10,11 +10,13 @@
   const searchBtn = document.getElementById('searchBtn');
   const trashButton = document.getElementById("trashButton");
   const archivesButton = document.getElementById("archivesButton");
-  const labelsButton = document.getElementById("labelsButton");
   const notesButton = document.getElementById("notesButton");
   const sideMenuContainer = document.getElementById('sideMenuContainer');
-  let userId;
+  const labelInputCon = document.getElementById("labelInputCon");
+  const labelInput = document.getElementById("labelInput");
+  const tagButton = document.getElementById("tagButton");
 
+  let userId;
   // User login (for demonstration)
   async function login(username, password) {
     console.log("hi from login")
@@ -32,14 +34,17 @@
     try {
       const response = await fetch(url, options)
       const data = await response.json()
+      userId = data.userId
       localStorage.setItem("my_token", data.token)
-      userId = response.userId
+
     } catch (error) {
       console.log(error)
     }
   }
 
-  login("radha", "radha");
+  (async () => {
+    await login("sampath", "sampath");
+  })();
 
   addNoteBtn.addEventListener('click', () => {
     noteText.value = '';
@@ -58,6 +63,12 @@
   noteModal.addEventListener('click', (e) => {
     if (e.target === noteModal) {
       noteModal.style.display = 'none';
+    }
+  });
+
+  labelInputCon.addEventListener('click', (e) => {
+    if (e.target === labelInputCon) {
+      labelInputCon.style.display = 'none';
     }
   });
 
@@ -119,14 +130,53 @@ notesButton.onclick = ()=>{loadNotesFromServer()}
         loadNotesFromServer();
   }
 
-  function onLabelNote(){}
+  async function loadTags(noteId) {
+    const response = await fetch(`/notes/labels/${noteId}`);
+    const tags = await response.json();
+    return tags;
+  }
+
+  function onLabelNote(noteId){
+    labelInputCon.style.display = 'flex';
+    let noteElement = document.getElementById(noteId);
+    
+    labelInput.onchange = (event)=>{
+      const tagValue = event.target.value
+      console.log(tagValue)
+      tagButton.value = tagValue
+    }
+    
+    let label;
+    tagButton.onclick = (event)=>{
+      label = event.target.value
+      labelInputCon.style.display = 'none';
+      addNoteToServer(label, noteId, userId)
+    }
+
+    const addNoteToServer = async(label, noteId, userId) =>{
+      console.log("addNoteToSErver", label, noteId, userId)
+      await fetch(`/notes/${noteId}/label`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          labelName: label,
+          userId
+        })
+      });
+      loadTags(noteId)
+      loadNotesFromServer();
+    }
+
+  }
 
   function onBackgroundChangeNote(){}
 
-  function addNoteToDOM(text, id) {
+  async function addNoteToDOM(text, id) {
     const note = document.createElement('div');
     const content = document.createElement("h6");
-    const buttonList = document.createElement('ul')
+    const buttonList = document.createElement('div')
     buttonList.className = 'icon-button-con';
     content.textContent = text;
 
@@ -170,16 +220,38 @@ notesButton.onclick = ()=>{loadNotesFromServer()}
     labelButton.appendChild(labelIcon)
     labelButton.setAttribute("id", 'labelButton')
     labelButton.onclick = function () {
-      onLabelNote(id);
+      onLabelNote(id)
     };
 
     buttonList.appendChild(archiveButton)
     buttonList.appendChild(trashButton)
     buttonList.appendChild(backgroundColorButton)
     buttonList.appendChild(labelButton)
+
+    const buttonsAndTextCon = document.createElement("div");
+    buttonsAndTextCon.className = "buttons-and-textCon"
+
     
-    note.appendChild(buttonList)
-    note.appendChild(content);
+    buttonsAndTextCon.appendChild(content);
+    buttonsAndTextCon.appendChild(buttonList);
+    note.appendChild(buttonsAndTextCon);
+
+    const noteTags = await loadTags(id)
+
+    console.log(id, noteTags)
+
+    if(noteTags.length > 0){
+      const tagsCon = document.createElement("ul")
+      tagsCon.className = 'tags-con'
+      noteTags.map((tag, index)=>{
+        const tagElement = document.createElement("li")
+        tagElement.textContent = tag
+        tagsCon.appendChild(tagElement)
+      })
+      console.log("hello from iteration")
+      note.appendChild(tagsCon);
+    }
+
     note.className = 'note';
     note.setAttribute("id", `${id}`)
     notesContainer.appendChild(note);
@@ -216,6 +288,6 @@ notesButton.onclick = ()=>{loadNotesFromServer()}
       }
     });
   }
-  
+
   loadNotesFromServer();
 });

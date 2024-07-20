@@ -22,16 +22,26 @@
   <div id="sidebar" class="sidebar">
     <ul id="sideMenuContainer">
       <li><button id="notesButton">Notes</button></li>
-      <li><button id="labelsButton">Labels</button></li>
       <li><button id="archivesButton">Archive</button></li>
       <li><button id="trashButton">Trash</button></li>
     </ul>
   </div>
 
-  <main>
-    <div id="notesContainer"></div>
+  <main style="height: 100vh; width: 100vw;">
+
     <button id="addNoteBtn">Add Note</button>
+    <div id="notesContainer"></div>
+
   </main>
+
+  <div class="modal" id="labelInputCon">
+    <div class="modal-content">
+        <input type="text" class="label-input" id="labelInput"/>
+        <button type="button" id="tagButton">add tag</button>
+        <span style="font-size: 10px;">You can add upto 9 tags</span>
+    </div>
+  </div>
+
 
   <div id="noteModal" class="modal">
     <div class="modal-content">

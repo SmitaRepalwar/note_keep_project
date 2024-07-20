@@ -180,10 +180,11 @@ cron.schedule('0 0 * * *', () => {
   });
 });
 
-// Endpoint to add a tag to a note
-app.post('/notes/:id/tags', (req, res) => {
+
+// Endpoint to add a label to a note
+app.post('/notes/:id/label', (req, res) => {
   const noteId = req.params.id;
-  const { tagName } = req.body;
+  const { labelName } = req.body;
   const userId = req.session.userId;
 
   if (!userId) {
@@ -191,37 +192,49 @@ app.post('/notes/:id/tags', (req, res) => {
   }
 
   // Check if the note belongs to the user
-  db.query('SELECT * FROM notes WHERE id = ? AND userid = ?', [noteId, userId], (err, results) => {
+  db.query('SELECT * FROM notes WHERE id = ? AND user_id = ?', [noteId, userId], (err, results) => {
       if (err) return res.status(500).send(err);
       if (results.length === 0) return res.status(404).send('Note not found');
 
-      // Check if the note already has 9 tags
-      db.query('SELECT COUNT(*) AS tagCount FROM note_tags WHERE note_id = ?', [noteId], (err, results) => {
+      // Check if the note already has 9 labels
+      db.query('SELECT COUNT(*) AS labelCount FROM note_labels WHERE note_id = ?', [noteId], (err, results) => {
           if (err) return res.status(500).send(err);
-          if (results[0].tagCount >= 9) return res.status(400).send('Cannot add more than 9 tags to a note');
+          if (results[0].labelCount >= 9) return res.status(400).send('Cannot add more than 9 labels to a note');
 
-          // Insert the tag if it doesn't exist
-          db.query('INSERT IGNORE INTO tags (name) VALUES (?)', [tagName], (err, results) => {
+          // Check if the label already exists
+          db.query('SELECT id FROM labels WHERE name = ?', [labelName], (err, results) => {
               if (err) return res.status(500).send(err);
 
-              // Get the tag ID
-              db.query('SELECT id FROM tags WHERE name = ?', [tagName], (err, results) => {
-                  if (err) return res.status(500).send(err);
-                  const tagId = results[0].id;
-
-                  // Associate the tag with the note
-                  db.query('INSERT INTO note_tags (note_id, tag_id) VALUES (?, ?)', [noteId, tagId], (err, results) => {
+              let labelId;
+              if (results.length > 0) {
+                  // label already exists
+                  labelId = results[0].id;
+                  associatelabelWithNote(noteId, labelId, res);
+              } else {
+                  // label does not exist, insert it
+                  db.query('INSERT INTO labels (user_id, name, note_id) VALUES (?, ?, ?)', [userId, labelName, noteId], (err, result) => {
                       if (err) return res.status(500).send(err);
-                      res.send('Tag added successfully');
+                      labelId = result.insertId;
+                      associatelabelWithNote(noteId, labelId, res);
                   });
-              });
+              }
           });
       });
   });
 });
 
-// Endpoint to fetch tags for a specific note
-app.get('/notes/:id/tags', (req, res) => {
+
+function associatelabelWithNote(noteId, labelId, res) {
+  // Associate the label with the note
+  db.query('INSERT INTO note_labels (note_id, label_id) VALUES (?, ?)', [noteId, labelId], (err, result) => {
+      if (err) return res.status(500).send(err);
+      res.send('label added successfully');
+  });
+}
+
+
+// Endpoint to fetch labels for a specific note
+app.get('/notes/labels/:id', (req, res) => {
   const noteId = req.params.id;
   const userId = req.session.userId;
 
@@ -230,10 +243,10 @@ app.get('/notes/:id/tags', (req, res) => {
   }
 
   db.query(`
-      SELECT tags.name
-      FROM tags
-      JOIN note_tags ON tags.id = note_tags.tag_id
-      WHERE note_tags.note_id = ?
+      SELECT labels.name
+      FROM labels
+      JOIN note_labels ON labels.id = note_labels.label_id
+      WHERE note_labels.note_id = ?
   `, [noteId], (err, results) => {
       if (err) return res.status(500).send(err);
       res.json(results.map(row => row.name));

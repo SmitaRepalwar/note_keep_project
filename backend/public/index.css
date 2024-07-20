@@ -6,6 +6,8 @@ body {
     align-items: center;
     height: 100vh;
     margin: 0;
+    overflow-y: scroll;
+    scrollbar-width: 2px;
 }
 
 .container {
@@ -50,6 +52,7 @@ body {
 
 button {
     width: 100%;
+    max-height: 40px;
     padding: 10px;
     background-color: #f696f0;
     color: white;
@@ -101,8 +104,8 @@ header input[type="text"] {
 }
 
 main {
-  width: calc(100% - 250px);
-  margin-top: 4em;
+  width: 100vw;
+  margin-top: 300px;
   margin-left: 250px;
   padding: 10px;
   display: flex;
@@ -114,17 +117,6 @@ main {
   display: flex;
   flex-wrap: wrap;
   gap: 1em;
-}
-
-.note {
-  background-color: #fff;
-  padding: 1em;
-  border: 1px solid #ccc;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-  border-radius: 4px;
-  width: 200px;
-  min-height: 100px;
-  box-sizing: border-box;
 }
 
 .modal {
@@ -204,10 +196,41 @@ textarea {
 }
 
 .note {
+  max-height: 130px;
+  width: 250px;
+  background-color: #fff;
+  display: flex;
+  justify-content:center;
+  align-items: flex-end;
   border: 1px solid #ccc;
-  padding: 10px;
-  margin: 10px;
-  position: relative;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.buttons-and-textCon{
+  height: 99%;
+  width: 50%;
+  background-color: #fff;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.tags-con{
+  height: 90%;
+  width: 50%;
+  background-color: #fff;
+  display: flex;
+  flex-direction: column;
+  padding: 5px;
+  justify-content: space-around;
+  align-items: flex-end;
+  list-style-type: none;
+  font-size: 8px;
+  margin: 0px;
+  color: #000000;
 }
 
 .note-label {
@@ -237,4 +260,20 @@ textarea {
 .icon{
   font-size: 12px;
   color: #000000;
+}
+
+.label-input-con{
+  height: 200px;
+  width: 200px;
+  box-shadow: 1px 2px 4px 0px#888888;
+  display: none;
+  font-size: 10px;
+}
+
+.label-input{
+  height: 20px;
+  width: 100%;
+  border-width: 1px;
+  border-style: solid;
+  outline: none;
 }
